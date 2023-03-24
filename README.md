@@ -5,6 +5,10 @@
 > KEEPER 2023년 1학기 React 스터디로,  
 > 새로운 리액트 공식 문서 [react.dev](https://react.dev/)를 활용하여 공부하는 스터디입니다.
 
+### 주차별 진행상황
+1️⃣ ~Installation (소현 - 3/24 대면) https://github.com/KEEPER31337/ReactStudy/issues/7  
+2️⃣ ~JavaScript in JSX with Curly Braces (서윤 - 3/31 비대면)
+
 ### 참여방법
 
 - 최상위에 본인의 폴더를 만든다.
