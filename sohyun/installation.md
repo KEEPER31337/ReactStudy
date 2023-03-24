@@ -2,14 +2,15 @@
 
 [Installation 번역하면서 공부한 내용] : (https://www.notion.so/Installation-a0648d469e414eafaa103ea325e4e196?pvs=4)
 
-
-## Start a New React Project
 * * *
+## Start a New React Project
+
 ### local 개발은 Node.js 설치 필요 
 framework 없이 react개발도 가능하지만, 페이지 일부에만 적용가능하다. 완전히 React로 새로운 app이나 site를 구축하는 경우 framework를 사용하는 것이 좋다.
 
-## Add React to an Existing Project
 * * *
+## Add React to an Existing Project
+
 ### 기존의 website에 전체 하위 경로를 React로 사용
 
 다른 서버 기술로 구축된 기존의 **example.com** web app이 있고, **React로** [**example.com/some-app/](http://example.com/some-app/) 로 모든 경로를 구현한다고 가정하자.**
@@ -34,9 +35,9 @@ framework 없이 react개발도 가능하지만, 페이지 일부에만 적용�
 
 기존의 native app은 React Native와 통합될 수 있다.
 
-
-## Editor Setup
 * * *
+## Editor Setup
+
 ### 가장 많이 사용되는 Editor
 
 VSCode가 가장 많이 사용된다.
@@ -51,8 +52,9 @@ VSCode가 가장 많이 사용된다.
 
 Prettier를 사용하자.
 
-## React Developer Tools
 * * *
+## React Developer Tools
+
 React 개발자 도구를 사용해서 React component 검사 및 props와 state를 편집해서 성능 문제 식별 가능
 
 ###### 자세한 내용을 확인하고 싶다면 직접 홈페이지 참고하기
