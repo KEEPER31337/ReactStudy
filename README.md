@@ -7,7 +7,8 @@
 
 ### 주차별 진행상황
 1️⃣ ~Installation (소현 - 3/24 대면) https://github.com/KEEPER31337/ReactStudy/issues/7  
-2️⃣ ~JavaScript in JSX with Curly Braces (서윤 - 3/31 비대면)
+2️⃣ ~JavaScript in JSX with Curly Braces (서윤 - 3/31 비대면) https://github.com/KEEPER31337/ReactStudy/issues/19  
+3️⃣ ~Keeping Components Pure (해중 - 4/7 대면)
 
 ### 참여방법
 
