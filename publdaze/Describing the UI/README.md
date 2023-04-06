@@ -64,3 +64,24 @@ export default function Gallery() {
   - 컴포넌트를 한 번 정의한 다음 원하는 곳에 원하는 만큼 여러 번 사용할 수 있음
 
 > 컴포넌트를 중첩하려 렌더링 하는 건 가능하지만 정의를 중첩해서는 암됨
+
+# Importing and Exporting Components
+
+## The root component file
+
+-**Create React App**에서는 앱 전체가 `src/App.js`에서 실행되며 설정에 따라 root 컴포넌트가 다른 파일에 위치 가능.
+Next.js처럼 파일 기반으로 라우팅하는 프레임워크일 경우 페이지별로 root 컴포넌트가 다를 수 있음.
+
+## Exporting and importing a component
+
+컴포넌트의 모듈성이 강화되고 다른 파일에서 재사용할 수 있도록 파일 분리하는 3단계
+
+1. 컴포넌트 넣을 파일 생성
+2. 새로 만든 파일에 컴포넌트 함수 export
+3. 컴포넌트를 사용할 파일에 import해서 사용
+
+## Exporting and importing multiple components from the same file
+
+한 파일에 `default export`는 하나만 가질 수 있지만, `named export`는 여러 개 가능
+
+- `named import` 방식은 중괄호를 사용하여 import 가능
