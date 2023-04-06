@@ -56,3 +56,9 @@ export default Publdaze;
 
 7. 본인 컴포넌트 폴더 내에 추가 실습 폴더 및 컴포넌트 생성하고 3번에서 생성한 본인 컴포넌트에 import해서 사용해보며 실습 진행
    <img width="323" alt="image" src="https://user-images.githubusercontent.com/78250089/230439377-13b250c1-5157-42b7-b1ad-b8f4d9072038.png"> <img width="362" alt="image" src="https://user-images.githubusercontent.com/78250089/230439618-cd99d3de-3222-449f-a45e-524117698866.png">
+
+## 실행 방법
+
+1. root 경로에서 **practice** 폴더로 이동 `cd practice`
+2. 프로젝트에 필요한 패키지를 설치 `npm i`
+3. 프로젝트 실행 `npm start`
