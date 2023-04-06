@@ -36,12 +36,20 @@ const Publdaze = () => {
 export default Publdaze;
 ```
 
-3. `App.jsx` 파일 상단에 본인 컴포넌트 import해주기
-4. `App.jsx` 파일의 `router` 안의 `children` 배열에 아래 예시 같이 코드 추가
+4. `App.jsx` 파일 상단에 본인 컴포넌트 import해주기
+5. `App.jsx` 파일의 `router` 안의 `children` 배열에 아래 예시 같이 코드 추가
 
 ```jsx
 {
   path: "publdaze",
   element: <Publdaze />,
 },
+```
+
+6. `Home.jsx`에 본인 링크 추가
+
+```jsx
+<Link to="publdaze">
+  <h3>publdaze</h3>
+</Link>
 ```
