@@ -69,8 +69,8 @@ export default function Gallery() {
 
 ## The root component file
 
--**Create React App**에서는 앱 전체가 `src/App.js`에서 실행되며 설정에 따라 root 컴포넌트가 다른 파일에 위치 가능.
-Next.js처럼 파일 기반으로 라우팅하는 프레임워크일 경우 페이지별로 root 컴포넌트가 다를 수 있음.
+- **Create React App**에서는 앱 전체가 `src/App.js`에서 실행되며 설정에 따라 root 컴포넌트가 다른 파일에 위치 가능.
+  Next.js처럼 파일 기반으로 라우팅하는 프레임워크일 경우 페이지별로 root 컴포넌트가 다를 수 있음.
 
 ## Exporting and importing a component
 
@@ -85,3 +85,41 @@ Next.js처럼 파일 기반으로 라우팅하는 프레임워크일 경우 페�
 한 파일에 `default export`는 하나만 가질 수 있지만, `named export`는 여러 개 가능
 
 - `named import` 방식은 중괄호를 사용하여 import 가능
+
+# Writing Markup with JSX
+
+JSX는 JavaScript를 확장한 문법으로, JavaScript 파일 안에 HTML과 유사한 마크업을 작성할 수 있도록 해줌.
+
+## JSX: Putting markup into JavaScript
+
+웹이 interactive 해지면서 로직이 컨텐츠를 결정하는 경우가 많아짐
+-> JavaScript가 HTML을 담당하게 됨
+=> 이것이 바로 React에서 렌더링 로직과 마크업이 같은 위치의 컴포넌트에 함께 있는 이유
+
+## Converting HTML to JSX
+
+JSX는 HTML보다 더 엄격하며 몇 가지 규칙이 더 있음
+
+## The Rules of JSX
+
+1. Return a single root element
+
+- 컴포넌트에서 다수의 엘리먼트들을 반환하기 위해서는 하나의 부모 태그로 감싸줘야 함.
+  - \<div>
+  - <> (Fragment)
+
+2. Close all the tags
+
+- JSX는 태그를 명식적으로 닫아줘야 함
+  - <태그 />
+  - <태그></태그>
+
+3. camelCase ~~all~~ most of the things!
+
+- JSX는 JavaScript로 바뀌고 JSX에서 작성된 어트리뷰트는 JavaScript 객체의 키가 됨
+- 컴포넌트에서는 종종 어트리뷰트를 변수로 읽고 싶은 경우가 있는데 JavaScript는 변수명에 대시를 포함하거나 class처럼 예약어를 사용할 수 없는 제한이 있음
+  => React에서 HTML과 SVG의 어트리뷰트 대부분이 camelCase로 작성됨
+
+## Pro-tip: Use a JSX Converter
+
+[변환기](https://transform.tools/html-to-jsx)를 사용하여 기존 HTML과 SVG를 JSX로 변환할 수 있음
