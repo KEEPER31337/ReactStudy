@@ -117,3 +117,42 @@ ex. 필드가 많은 양식
 ## State is isolated and private
 
 같은 컴포넌트를 두 번 렌더링 할 경우 컴포넌트 내의 state는 독립적이며 서로 영향을 주지 않는다.
+
+# Render and Commit
+
+UI 요청하고 제공하는 프로세스
+
+1. Triggering a render (손님의 주문을 주방으로 전달)
+2. Rendering the component (주방에서 주문 준비)
+3. Committing to the DOM (테이블에 가져다 주기)
+
+## Step 1: Trigger a render
+
+컴포넌트를 렌더링 하는 2가지 이유
+
+- 컴포넌트의 initial render이기 때문
+- 컴포넌트의 state는 update 되어야 한다.
+
+### Initial render
+
+앱을 시작할 때, initial render를 트리거 해야한다.
+대상 DOM node를 `createRoot`로 호출한 후 `render` 메서드로 이를 호출한다.
+
+### Re-renders when state updates
+
+일단 컴포넌트가 처음 렌더링되면 set함수로 state를 업데이트 함으로써 추가적인 렌더링을 트리거 할 수 있다. - 컴포넌트의 state를 업데이트하면 자동적으로 렌더링 대기열에 추가된다.
+
+## Step 2: React renders your components
+
+render를 트리거 한 후, 리액트는 화면에 무엇을 표시할 지 알아내기 위해 컴포넌트를 호출 한다.
+렌더링이란: 리액트가 컴포넌트를 호출하는 것이다.
+
+## Step 3: React commits changes to the DOM
+
+구성 요소를 렌더링(호출)한 후 React는 DOM을 수정한다.
+
+- React는 렌더링 간에 차이가 있는 경우에만 DOM 노드를 변경
+
+## Epilogue: Browser paint
+
+렌더링이 완료되고 React가 DOM을 업데이트한 후 브라우저는 화면을 repaint하는데, 프로세스는 이른 browser rendering으로 알고 있지만 이 문서에서는 혼동을 피하기 위해 painting이라고 일컫는다.
