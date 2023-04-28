@@ -152,3 +152,48 @@ JSX에서 객체를 전달하려면 `person={{ name: "Hedy Lamarr", inventions: 
 +) 인라인 스타일 프로퍼티는 camelCase로 작성
 
 - ex. HTML에서의 `<ul style="background-color: black">`은 컴포넌트에서 `<ul style={{ backgroundColor: 'black' }}>`로 작성
+
+# Passing Props to a Component
+
+모든 부모 컴포넌트는 자식 컴포넌트 들에게 props를 넘겨줌으로써 정보를 전달 할 수 있음
+
+## Familiar props
+
+Props
+
+- JSX 태그로 전달하는 정보
+- (HTML) 태그에 전달할 수 있는 정보는 미리 정해져 있으나, 사용자 지정 컴포넌트에는 어떤 props도 전달 가능
+
+## Passing props to a component
+
+1. Pass props to the child component
+2. Read props inside the child component
+
+- 일반적으로 전체 props 개체 자체가 필요하지 않으므로 개체를 구조 분해 할당하여 사용
+
+## Specifying a default value for a prop
+
+prop의 기본 값을 사용하기 위해서 파라미터 다음에 `=` 를 사용해 값을 지정할 수 있음
+
+- 값을 전달하지 않을 때, undefined로 전달될 때 기본 값으로 사용 됨
+
+ex.
+
+```jsx
+function Avatar({ person, size = 100 }) {
+  // ...
+}
+```
+
+## Forwarding props with the JSX spread syntax
+
+props가 반복적으로 전달 될 때 간결함을 중시하고 직접적으로 props를 사용하는 게 아니라면 `...props`와 같이 스프레드 연산자를 사용할 수 있음
+
+## Passing JSX as children
+
+JSX 태그 안에 content를 중첩하면 부모 컴포넌트는 content를 children이라는 prop으로 전달 받을 수 있음
+
+## How props change over time
+
+- props는 처음 뿐만이 아니라 모든 시점에서 컴포넌트의 데이터를 반영할 수 있음
+- 하지만 props는 immutable(불변)함 - 구성 요소가 props를 변경해야 할 때 부모 구성 요소에 다른(새로운) props를 전달하도록 요성해야함 -> 이전 props는 폐기되고, JavaScript 엔진은 props가 가져간 메모리를 회수함
