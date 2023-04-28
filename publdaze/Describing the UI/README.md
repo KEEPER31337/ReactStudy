@@ -123,3 +123,32 @@ JSX는 HTML보다 더 엄격하며 몇 가지 규칙이 더 있음
 ## Pro-tip: Use a JSX Converter
 
 [변환기](https://transform.tools/html-to-jsx)를 사용하여 기존 HTML과 SVG를 JSX로 변환할 수 있음
+
+# JavaScript in JSX with Curly Braces
+
+## Passing strings with quotes
+
+- 문자열 어트리뷰트를 JSX에 전달하려면 작은따옴표나 큰따옴표로 묶어야 함
+- 텍스트를 동적으로 지정하기 위해서는 중괄호를 사용하여 마크업에서 바로 JavaScript 값을 사용할 수 있음
+
+## Using curly braces: A window into the JavaScript world
+
+JSX 안에서 중괄호는 두 가지 방법으로 사용 가능
+
+1. JSX 태그 안의 문자
+
+- ex. `<h1>{name}'s To Do List</h1>`
+
+2. = 바로 뒤에 오는 어트리뷰트
+
+- ex. `src={avatar}`
+
+## Using “double curlies”: CSS and other objects in JSX
+
+JSX에서 객체를 전달하려면 `person={{ name: "Hedy Lamarr", inventions: 5 }}`와 같이 다른 중괄호 쌍으로 객체를 감싸야 함
+
+- ex. JSX의 인라인 CSS 스타일
+
++) 인라인 스타일 프로퍼티는 camelCase로 작성
+
+- ex. HTML에서의 `<ul style="background-color: black">`은 컴포넌트에서 `<ul style={{ backgroundColor: 'black' }}>`로 작성
