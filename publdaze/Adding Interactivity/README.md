@@ -74,3 +74,46 @@ ex. \<form>이 이벤트를 제출했을 때 전체 페이지가 리로드 됨
 ## Can event handlers have side effects?
 
 이벤트 핸들러는 side effects가 발생하기 최적의 장소
+
+# State: A Component's Memory
+
+## When a regular variable isn’t enough
+
+- 지역 변수는 렌더링 간에 유지되지 않음 - React가 이 구성 요소를 두 번째로 렌더링할 때 변경사항에 대한 고려 없이처음부터 렌더링 함
+- 로컬 변수를 변경해도 렌더링이 트리거되지 않음 - React는 새 데이터로 구성 요소를 다시 렌더링해야 한다는 것을 인식하지 못함
+  =>
+- 렌더링 간에 데이터를 유지 함
+- React를 트리거하여 새 데이터로 구성 요소를 렌더링 함(다시 렌더링)
+
+## Adding a state variable
+
+state 변수를 사용하기 위해서 `useState`를 파일 상단에 import 해야 함
+
+ex.
+`const [index, setIndex] = useState(0);`
+
+여기서 index는 state 변수이며, setIndex는 setter 함수
+
+### Meet your first Hook
+
+`useState`는 `use`로 시작하는 다른 함수 처럼 **Hook**이라고 부름
+Hook은 React가 렌더링 되는 동안만 사용할 수 있는 특수 함수이다.
+
++)
+hookdms 조건, 루프, 기타 중첩 함수 내에서 호출 불가
+
+### Anatomy of useState
+
+useState의 유일한 인자로 state 변수의 초기값을 넘겨줄 수 있다.
+
+## Giving a component multiple state variables
+
+한 컴포넌트에 여러 개의 state를 사용할 수 있다.
+
+state가 관련이 없을 경우 다수의 state를 사용하는 건 좋은 생각이나, 두 state를 자주 같이 변경한다면 그것을 하나로 합치는 게 더 쉬울 것이다.
+
+ex. 필드가 많은 양식
+
+## State is isolated and private
+
+같은 컴포넌트를 두 번 렌더링 할 경우 컴포넌트 내의 state는 독립적이며 서로 영향을 주지 않는다.
