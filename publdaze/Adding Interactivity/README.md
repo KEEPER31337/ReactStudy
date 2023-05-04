@@ -128,10 +128,10 @@ UI 요청하고 제공하는 프로세스
 
 ## Step 1: Trigger a render
 
-컴포넌트를 렌더링 하는 2가지 이유
+컴포넌트를 렌더링 되는 2가지 이유
 
-- 컴포넌트의 initial render이기 때문
-- 컴포넌트의 state는 update 되어야 한다.
+- 컴포넌트의 initial render될 때
+- 컴포넌트의 state는 update 될 때
 
 ### Initial render
 
@@ -156,3 +156,103 @@ render를 트리거 한 후, 리액트는 화면에 무엇을 표시할 지 알�
 ## Epilogue: Browser paint
 
 렌더링이 완료되고 React가 DOM을 업데이트한 후 브라우저는 화면을 repaint하는데, 프로세스는 이른 browser rendering으로 알고 있지만 이 문서에서는 혼동을 피하기 위해 painting이라고 일컫는다.
+
+## 스냅샷으로서의 State
+
+### state를 설정하여 렌더링 유발한다.
+
+```jsx
+import { useState } from "react";
+
+export default function Form() {
+  const [isSent, setIsSent] = useState(false);
+  const [message, setMessage] = useState("Hi!");
+
+  if (isSent) {
+    return <h1>Your message is on its way!</h1>;
+  }
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        setIsSent(true);
+      }}
+    >
+      <textarea
+        placeholder="Message"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+버튼을 클릭시 동작은 다음과 같습니다.
+
+1. `onSubmit` 이벤트 핸들러가 실행됩니다.
+2. `setIsSent(true)`가 `isSent`를 `true`로 설정하고 새로운 렌더링을 큐에 넣습니다.
+3. React는 새로운 `isSent`값에 따라 컴포넌트를 다시 렌더링합니다.
+
+### 렌더링은 각 시점에 스냅샷을 생성한다.
+
+> 렌더링이란?
+> React가 컴포넌트 함수를 호출하는 것
+
+함수로부터 반환되는 JSX는 시간상 UI의 스냅샷과 같습니다.
+이 때 props, event handlers, local variales은 렌더링 시의 값을 계산하여 사용됩니다.
+
+**리렌더링 과정**
+![Image](https://user-images.githubusercontent.com/78250089/236166079-b2614fed-8fa2-425e-8999-20aedd80dadd.png)
+
+**state 업데이트로 인한 렌더링 과정**
+![Image](https://user-images.githubusercontent.com/78250089/236168775-37fbe024-d968-40ae-9013-6e72187cf53a.png)
+
+예시)
+
+```jsx
+const [number, setNumber] = useState(0);
+// ...
+<button
+  onClick={() => {
+    setNumber(number + 1);
+    setNumber(number + 1);
+    setNumber(number + 1);
+  }}
+>
+  +3
+</button>;
+```
+
+state를 설정하면 다음 렌더링에 대해서만 변경되기 때문에
+첫 번째 렌더링시 `number`는 `0`이었으니 `onClick`핸들러에서 `setNumber(number + 1)`가 호출된 후에도 `number`의 값은 여전히 0이 됩니다.
+
+### 시간 경과에 따른 State
+
+```jsx
+<button
+  onClick={() => {
+    setNumber(number + 5);
+    alert(number);
+  }}
+>
+  +5
+</button>
+```
+
+```jsx
+<button
+  onClick={() => {
+    setNumber(number + 5);
+    setTimeout(() => {
+      alert(number);
+    }, 3000);
+  }}
+>
+  +5
+</button>
+```
+
+두 코드 다 같은 렌더링 중(스냅샷을 찍었을 때)의 값을 반영하기 때문에 값이 변경되기 전 값을 띄워줍니다.
