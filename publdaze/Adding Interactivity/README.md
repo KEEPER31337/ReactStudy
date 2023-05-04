@@ -256,3 +256,87 @@ state를 설정하면 다음 렌더링에 대해서만 변경되기 때문에
 ```
 
 두 코드 다 같은 렌더링 중(스냅샷을 찍었을 때)의 값을 반영하기 때문에 값이 변경되기 전 값을 띄워줍니다.
+
+## 여러 state 업데이트를 큐에 담기
+
+> state 변수를 설정하면 다음 렌더링이 큐(대기열, queue)에 들어갑니다. 그러나 경우에 따라 다음 렌더링을 큐에 넣기 전에, 값에 대해 여러 작업을 수행하고 싶을 때도 있습니다.
+
+### state 업데이트 일괄처리
+
+React는 state 업데이트를 하기 전에 이벤트 핸들러의 모든 코드가 실행될 때까지 기다립니다.
+이렇게 하면 너무 많은 리렌더링을 촉발하지 않고 다수의 state 변수를 업데이트할 수 있습니다.
+=> 이를 **batching**(일괄처리)이라고 합니다.
+
+**batching**의 장점
+
+- React 앱을 훨씬 빠르게 실행할 수 있게 합니다.
+- 일부 변수만 업데이트된 “반쯤 완성된” 혼란스러운 렌더링을 처리하지 않아도 됩니다.
+
+### 다음 렌더링 전에 동일한 state 변수를 여러 번 업데이트하기
+
+렌더링 전에 동일한 state 변수를 여러 번 업데이트 하기 위해 이전 state를 기반으로 다음 state를 계산하는 함수를 전달할 수 있습니다.
+
+`setNumber(number + 1)`
+->
+`setNumber(n => n + 1)`
+
+여기서 `n => n + 1`는 **updater function**(업데이터 함수)
+
+**updater function이 setter에 전달될 때 과정**
+
+1. React는 이벤트 핸들러의 다른 코드가 모두 실행된 후에 이 함수가 처리되도록 큐에 넣습니다.
+2. 다음 렌더링 중에 React는 큐를 순회하여 최종 업데이트된 state를 제공합니다.
+
+ex.
+
+```jsx
+<button
+  onClick={() => {
+    setNumber(number + 5);
+    setNumber((n) => n + 1);
+  }}
+>
+  Increase the number
+</button>
+```
+
+![Image](https://user-images.githubusercontent.com/78250089/236205602-876bb5e5-4891-4ea5-a2d9-b3a7185210fb.png)
+
+### 업데이트 후 state를 바꾸면 어떻게 될까
+
+```jsx
+<button
+  onClick={() => {
+    setNumber(number + 5);
+    setNumber((n) => n + 1);
+    setNumber(42);
+  }}
+>
+  Increase the number
+</button>
+```
+
+![Image](https://user-images.githubusercontent.com/78250089/236206669-e3a14a9f-4824-4adb-8aaf-4494f69eae93.png)
+
+주의)
+updater function은 순수해야하며 결과만 반환해야 함!
+updater function 내부에서 state를 변경하거나 다른 사이드 이팩트 실행하려고 하지 말기!
+
+### 명명 규칙
+
+업데이터 함수 인수의 이름은 해당 state 변수의 첫 글자로 지정하는 것이 일반적입니다.
+
+ex.
+
+```jsx
+setEnabled((e) => !e);
+setLastName((ln) => ln.reverse());
+setFriendCount((fc) => fc * 2);
+```
+
+자세한 코드를 선호하는 경우
+
+- 전체 state 변수 이름을 반복하거나 (ex. `setEnabled(enabled => !enabled)`)
+- **prev** 접두사를 사용하는 것 (ex. `setEnabled(prevEnabled => !prevEnabled)`)
+
+이 일반적인 규칙입니다.
