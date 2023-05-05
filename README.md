@@ -21,6 +21,7 @@
   - [프로젝트에서 이슈를 어떻게 생성하나요?](https://sparkling-radium-6f4.notion.site/bc9ed715c52e45eda8461619089655d8)
 - 공부한 내용을 이슈에 정리한다.
 - 실습 코드가 있을 경우 실습한 코드를 올린다.
+  - [실습은 어떻게 진행하나요?](https://github.com/KEEPER31337/ReactStudy/tree/main/practice#readme)
 - 커밋 메시지는 아래 양식을 권장합니다.
 
   (필수는 아니지만 추후 게임 프로젝트 할 때 이 양식으로 할거라 익숙해지기 위해 연습해보면 좋을 것 같습니다.)
