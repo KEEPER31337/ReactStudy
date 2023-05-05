@@ -340,3 +340,258 @@ setFriendCount((fc) => fc * 2);
 - **prev** 접두사를 사용하는 것 (ex. `setEnabled(prevEnabled => !prevEnabled)`)
 
 이 일반적인 규칙입니다.
+
+## 객체 state 업데이트
+
+> state는 객체를 포함해서, 어떤 종류의 JavaScript 값이든 저장할 수 있지만 React state에 있는 객체를 직접 변경하면 안 됩니다.
+대신 객체를 업데이트하려면 새 객체를 생성하고(혹은 기존 객체의 복사본을 만들고), 해당 복사본을 사용하도록 state를 설정해야 합니다.
+
+### mutation이란?
+
+`number`, `string`, `boolean` 과 같은 JavaScript 값들은 읽기만 가능하고 immutable한 값입니다.  
+이 값을 바꾸기 위해 re-render을 촉발할 수 있습니다.
+
+객체 state의 경우 기술적으로 객체 자체의 내용을 변경하는 것이 가능합니다.  
+=> 이를 **mutation**(변이)라고 합니다.
+
+하지만 React에서 기술적으로 객체가 mutable하더라도, immutable한 것 처럼 다뤄야 합니다.  
+즉, 객체를 직접 변경하는 대신, 항상 교체해야 합니다.
+
+### state를 읽기 전용으로 취급해라
+
+```jsx
+onPointerMove={e => {
+  position.x = e.clientX;
+  position.y = e.clientY;
+}}
+```
+
+위와 같은 코드에서는 이전 렌더링에서 position에 할당된 객체를 수정합니다.  
+하지만 state 설정자 함수를 사용하지 않았으므로 React는 객체가 변경된 걸 알지 못합니다.  
+따라서 렌더링에서 접근할 수 있는 state 값은 읽기 전용으로 취급해야 하며  
+state mutating이 경우에 따라 작동할 수는 있으나, 권장하지는 않습니다.
+
+->
+
+```jsx
+onPointerMove={e => {
+  setPosition({
+    x: e.clientX,
+    y: e.clientY
+  });
+}}
+```
+
+`setPosition`을 사용하면 `position`을 새 객체로 바꾸고 해당 컴포넌트를 다시 렌더링 하므로 의도했던 동작이 잘 수행될 수 있습니다.
+
+
+**[ DEEP DIVE ]**
+
+```jsx
+const nextPosition = {};
+nextPosition.x = e.clientX;
+nextPosition.y = e.clientY;
+setPosition(nextPosition);
+```
+
+```jsx
+setPosition({
+  x: e.clientX,
+  y: e.clientY
+});
+```
+
+
+첫번째 코드처럼 방금 생성한 새로운 객체를 mutating하는 것은 괜찮으며 첫번째 코드와 두번째 코드는 완전히 동일합니다.
+
+Mutation은 이미 state에 있는 객체를 변경할 때만 문제가 되며 방금 생성한 객체의 경우 다른 코드가 아직 참조하지 않으므로 객체를 변경해도 다른 객체에 영향을 미치지 않아 괜찮습니다.  
+=> 이를 **local mutation**(지역 변이)라고 합니다. 지역변이의 경우 렌더링하는 동안에도 수행할 수 있습니다.
+
+### spread 구문을 사용하여 객체 복사하기
+
+새 객체를 생성할 때 기존 데이터도 복사하고 싶은 경우
+
+```jsx
+setPerson({
+  firstName: e.target.value,
+  lastName: person.lastName,
+  email: person.email
+});
+```
+
+이와 같이 모든 속성을 개별적으로 복사하는 방법 대신
+
+```jsx
+setPerson({
+  ...person,
+  firstName: e.target.value
+});
+```
+
+이와 같이 `...` 객체 spread 구문을 사용할 수 있습니다.  
+
+`...` spread 구문 앝은 복사로 한 단계 깊이만 복사한다는 점을 유의해야 합니다.  
+-> 속도는 빠르지만 중첩된 속성을 업데이트 하려면 두 번 이상 사용해야 합니다.
+
+**[ DEEP DIVE ]**
+
+객체 내에서 동적 이름을 가진 속성도 지정할 수 있습니다.
+
+```jsx
+setPerson({
+  ...person,
+  [e.target.name]: e.target.value
+});
+```
+
+`<input>` DOM 요소에 지정된 `name` 속성을 참조하여 사용할 수 있으며,
+여러 필드에 대하여 여러 핸들러로 분리하여 사용하는 대신 단일 핸들러를 사용할 수 있습니다.
+
+### 중첩된 객체 업데이트하기
+
+```jsx
+const [person, setPerson] = useState({
+  name: 'Niki de Saint Phalle',
+  artwork: {
+    title: 'Blue Nana',
+    city: 'Hamburg',
+    image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+  }
+});
+```
+
+위의 중첩된 객체 구조에서 `person.artwork.city`를 업데이트 하고 싶으면  
+`person.artwork.city = 'New Delhi';` 처럼 mutation을 사용하는 방법이 명확합니다.
+
+하지만 React에서는 state를 immutable하게 다뤄야하므로  
+`city`를 변경하려면 먼저 새 `artwork` 객체를 생성한 다음 새 `artwork`을 가리키는 새로운 `person` 객체를 생성해야 합니다.  
+
+```jsx
+const nextArtwork = { ...person.artwork, city: 'New Delhi' };
+const nextPerson = { ...person, artwork: nextArtwork };
+setPerson(nextPerson);
+```
+
+단일 함수 호출로도 작성할 수 있습니다.
+
+```jsx
+setPerson({
+  ...person,
+  artwork: {
+    ...person.artwork,
+    city: 'New Delhi'
+  }
+});
+```
+
+**[ DEEP DIVE ]**
+
+코드가 실행될 때
+
+```jsx
+let obj = {
+  name: 'Niki de Saint Phalle',
+  artwork: {
+    title: 'Blue Nana',
+    city: 'Hamburg',
+    image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+  }
+};
+```
+
+이와 같은 객체는 실제로 중첩된 객체가 아닌 
+
+```jsx
+let obj1 = {
+  title: 'Blue Nana',
+  city: 'Hamburg',
+  image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+};
+
+let obj2 = {
+  name: 'Niki de Saint Phalle',
+  artwork: obj1
+};
+```
+
+이와 같이 서로 다른 객체를 보고 있습니다.  
+
+여기서 `obj1`은 `obj2`의 내부에 있지 않으므로 다른 객체에서도 사용할 수 있습니다.
+
+### Immer로 간결한 업데이트 로직 작성
+
+Immer는 mutating 구문을 사용하여 작성하더라도 자동으로 사본을 생성해주는 편리한 인기 라이브러리입니다.
+
+```jsx
+updatePerson(draft => {
+  draft.artwork.city = 'Lagos';
+});
+```
+
+이와 같이 객체를 mutating하는 것 처럼 사용할 수 있으니 일반 mutation과 달리 이전 state를 덮어쓰지 않습니다.
+
+**[ DEEP DIVE ]**
+
+Immer는 어떻게 동작하는가
+
+> Immer에서 제공하는 draft는 프록시라는 특수한 유형의 객체로, 사용자가 수행하는 작업을 “기록”합니다. 그렇기 때문에 원하는 만큼 자유롭게 수정할 수 있습니다! Immer는 내부적으로 draft의 어떤 부분이 변경되었는지 파악하고 편집 내용이 포함된 완전히 새로운 객체를 생성합니다.
+
+Immer을 사용하기 위해
+1. `npm install use-immer`을 실행하여 설치합니다.
+2. `useState` 대신 `import { useImmer } from 'use-immer'`로 useImmer을 사용합니다.
+
+```jsx
+import { useImmer } from 'use-immer';
+
+export default function Form() {
+  const [person, updatePerson] = useImmer({
+    name: 'Niki de Saint Phalle',
+    artwork: {
+      title: 'Blue Nana',
+      city: 'Hamburg',
+      image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+    }
+  });
+
+  function handleNameChange(e) {
+    updatePerson(draft => {
+      draft.name = e.target.value;
+    });
+  }
+
+  function handleTitleChange(e) {
+    updatePerson(draft => {
+      draft.artwork.title = e.target.value;
+    });
+  }
+
+  function handleCityChange(e) {
+    updatePerson(draft => {
+      draft.artwork.city = e.target.value;
+    });
+  }
+
+  function handleImageChange(e) {
+    updatePerson(draft => {
+      draft.artwork.image = e.target.value;
+    });
+  }
+}
+```
+
+이와 같이 state에 중첩이 있고 객체를 복사하는 코드가 반복되는 경우 업데이트 핸들러를 간결하게 유지하는 데 Immer는 좋은 방법입니다.
+
+**[ DEEP DIVE ]**
+
+React에서 state mutating을 권장하지 않는 이유
+
+- Debugging
+  - 렌더링 사이에 state가 어떻게 변경 되었는 지 명확하게 확인 가능합니다.
+- Optimizations
+  - state가 전과 후 동일하다면 작업을 건너뛰는 것이 가능하기 때문에 변경이 있었는 지 확인하는 것이 매우 빠릅니다.
+- New Features
+  - 현재 React에서 개발중인 기능이 state가 스냅샷처럼 취급되는 것에 의존합니다.
+- Requirement Changes
+  - 과거의 state 복사본을 메모리에 보관하면 필요할 때 재사용할 수 있기 때문에 실행 취소/다시 실행 구현, 변경 내역 표시, 사용자가 양식을 이전 값으로 재설정할 수 있도록 하는 등 기능을 추가하기에도 좋습니다.
+- Simpler Implementation
+  - 많은 “반응형” 솔루션처럼 프로퍼티를 가로채거나, 항상 프록시로 감싸거나, 초기화할 때 다른 작업을 하는 등 객체에 특별한 작업을 할 필요가 없습니다.
